@@ -1,0 +1,9 @@
+#!/bin/bash
+
+for SERIAL in $(adb devices | grep -v "List" | grep -v "* daemon" | cut -f 1); do
+  adb -s $SERIAL $@ &
+done
+
+for job in `jobs -p`; do
+  wait $job
+done
