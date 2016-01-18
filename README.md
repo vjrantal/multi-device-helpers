@@ -24,6 +24,7 @@ $ madb shell monkey -p some.package.name 1
 $ madb shell am force-stop some.package.name
 
 $ mstart some.package.name /folder/for/logs
+$ mstart some.package.name /tmp/$(date +%s)
 ```
 
 ## Troubleshoot

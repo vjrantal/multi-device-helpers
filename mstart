@@ -3,12 +3,14 @@
 PACKAGE_NAME=$1
 OUTPUT_FOLDER=$2
 
+LIST_OF_DEVICES=$(adb devices | grep -v "List" | grep -v "adb I " | grep -v "* daemon" | cut -f 1)
+
 function finish {
   echo "Finishing up..."
   for job in `jobs -p`; do
     kill $job
   done
-  for SERIAL in $(adb devices | grep -v "List" | grep -v "* daemon" | cut -f 1); do
+  for SERIAL in $LIST_OF_DEVICES; do
     adb -s $SERIAL shell am force-stop $PACKAGE_NAME
   done
   echo "All done."
@@ -17,7 +19,7 @@ function finish {
 trap finish SIGINT
 
 echo "Starting the app and writing logcat to following files:"
-for SERIAL in $(adb devices | grep -v "List" | grep -v "* daemon" | cut -f 1); do
+for SERIAL in $LIST_OF_DEVICES; do
   mkdir -p $OUTPUT_FOLDER
   adb -s $SERIAL shell monkey -p $PACKAGE_NAME 1 >/dev/null 2>&1
   PID=$(adb -s $SERIAL shell ps | grep $PACKAGE_NAME | cut -c10-15)

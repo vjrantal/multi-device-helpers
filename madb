@@ -1,6 +1,8 @@
 #!/bin/bash
 
-for SERIAL in $(adb devices | grep -v "List" | grep -v "* daemon" | cut -f 1); do
+LIST_OF_DEVICES=$(adb devices | grep -v "List" | grep -v "adb I " | grep -v "* daemon" | cut -f 1)
+
+for SERIAL in $LIST_OF_DEVICES; do
   adb -s $SERIAL $@ &
 done
 
